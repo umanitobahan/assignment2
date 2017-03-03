@@ -13,11 +13,13 @@ struct DUNGEON{
 typedef struct DUNGEON Dungeon;
 
 FILE *loadFile(char *name);
+void readFile(FILE *file);
+
 
 main(int argc, char *argv[]){
 	FILE *file = NULL;
 	file = loadFile(argv[1]);
-
+	readFile(file);
 	return EXIT_SUCCESS;
 }
 
@@ -34,4 +36,20 @@ FILE *loadFile(char *name){
 	}
 
 	return file;
+}
+
+void readFile(FILE *file){
+	int position = 0;
+	char ch = '\0';
+	Dungeon *newDungeon = NULL;
+	assert(file != NULL);
+	if(file != NULL){
+		ch = fgetc(file);
+		while( ch != EOF){
+			if(ch == '*'){
+					
+			}	
+		}
+	}
+
 }
