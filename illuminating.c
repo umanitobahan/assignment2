@@ -7,6 +7,7 @@
 struct DUNGEON{
 	char title[500];
 	char array[1000][1000];
+	char operate[500];
 	int rows;
 	int cols;
 	int steps;
@@ -19,18 +20,23 @@ FILE *loadFile(char *name);
 void readFile(Dungeon *newDungeon, FILE * const file);
 void printDungeon(Dungeon const * const newDungeon);
 void validateDungeon(Dungeon const * const newDungeon);
+void playDungeon(int m, Dungeon *newDungeon);
 
 int main(int argc, char *argv[]){
 	FILE *file = NULL;
 	Dungeon newDungeon;
+	int move = 0;
 
 	file = loadFile(argv[1]);
   	assert(file != NULL);
 	if(file != NULL){
 		readFile(&newDungeon, file);
 		validateDungeon(&newDungeon);
+		printDungeon(&newDungeon);
+		while(move <= newDungeon.steps){
+			playDungeon(move, &newDungeon);
+		}
 	}
-	printDungeon(&newDungeon);
 
 	return EXIT_SUCCESS;
 }
@@ -78,12 +84,29 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 		for(int r=1; r<=newDungeon->rows; r++){
 			for(int c=1; c<=newDungeon->cols; c++){
 				ch = fgetc(file);
-				newDungeon->array[r][c] = ch;		
+			  	if(ch == '@'){
+					newDungeon->array[r][c] = '%';
+				}
+				if(ch == '.'){
+					newDungeon->array[r][c] = ',';
+				}
+				if(ch == '~'){
+					newDungeon->array[r][c] = '!';
+				}
+				if(ch == ' '){
+					newDungeon->array[r][c] = ' ';
+				}
 			}
 			while(ch != '\n'){
 				ch = fgetc(file);
 			}
 		}
+		assert(ch == '\n');
+		for(position=0; position<newDungeon->steps; position++){
+			ch = fgetc(file);
+			newDungeon->operate[position] = ch;
+		}
+		newDungeon->operate[position] = '\0';
 		newDungeon->array[0][0] = '+';
 		newDungeon->array[0][newDungeon->cols+1] = '+';
 		newDungeon->array[newDungeon->rows+1][0] = '+';
@@ -112,7 +135,10 @@ void printDungeon(Dungeon const * const newDungeon){
                         }
                         printf("\n");
                 }
-
+	for(int i=0; i<newDungeon->steps; i++){
+		printf("%c", newDungeon->operate[i]);
+	}
+	printf("\n");
 	}
 }
 
@@ -121,4 +147,15 @@ void validateDungeon(Dungeon const * const newDungeon){
 	assert(newDungeon->title != NULL);
 	assert(newDungeon->title[strlen(newDungeon->title)] == '\0');
 	assert(newDungeon->array != NULL);
+}
+
+void playDungeon(int m, Dungeon *newDungeon){
+	assert(newDungeon != NULL);
+	if(newDungeon != NULL){
+		for(int i=0; i<newDungeon->steps; i++){
+			if(newDungeon->operate[i] == 'v'){
+
+			}
+		}
+	}	
 }
