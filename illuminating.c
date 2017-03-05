@@ -18,6 +18,7 @@ typedef struct DUNGEON Dungeon;
 FILE *loadFile(char *name);
 void readFile(Dungeon *newDungeon, FILE * const file);
 void printDungeon(Dungeon const * const newDungeon);
+void validateDungeon(Dungeon const * const newDungeon);
 
 int main(int argc, char *argv[]){
 	FILE *file = NULL;
@@ -27,11 +28,10 @@ int main(int argc, char *argv[]){
   	assert(file != NULL);
 	if(file != NULL){
 		readFile(&newDungeon, file);
+		validateDungeon(&newDungeon);
 	}
 	printDungeon(&newDungeon);
-	#ifdef NDEBUG
-		printf("Debug is off\n");
-	#endif
+
 	return EXIT_SUCCESS;
 }
 
@@ -97,11 +97,12 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 			newDungeon->array[r][newDungeon->cols+1] = '|';
 		}
 	}
-
+	validateDungeon(newDungeon);
 }
 
 void printDungeon(Dungeon const * const newDungeon){
 	assert(newDungeon != NULL);
+	validateDungeon(newDungeon);
 	if(newDungeon != NULL){
 		printf("%s\n", newDungeon->title);
 		printf("Move %d:\n",newDungeon->move);
@@ -113,4 +114,11 @@ void printDungeon(Dungeon const * const newDungeon){
                 }
 
 	}
+}
+
+void validateDungeon(Dungeon const * const newDungeon){
+	assert(newDungeon != NULL);
+	assert(newDungeon->title != NULL);
+	assert(newDungeon->title[strlen(newDungeon->title)] == '\0');
+	assert(newDungeon->array != NULL);
 }
