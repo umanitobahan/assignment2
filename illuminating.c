@@ -21,20 +21,16 @@ FILE *loadFile(char *name);
 void readFile(Dungeon *newDungeon, FILE * const file);
 void printDungeon(Dungeon const * const newDungeon);
 void validateDungeon(Dungeon const * const newDungeon);
-void playDungeon(int m, Dungeon *newDungeon);
+void playDungeon(Dungeon *newDungeon);
 
 int main(int argc, char *argv[]){
 	FILE *file = NULL;
 	Dungeon newDungeon;
-	int move = 0;
 
 	file = loadFile(argv[1]);
   	assert(file != NULL);
 	if(file != NULL){
 		readFile(&newDungeon, file);
-		validateDungeon(&newDungeon);
-		printDungeon(&newDungeon);
-		playDungeon(move, &newDungeon);
 	}
 
 	return EXIT_SUCCESS;
@@ -57,6 +53,7 @@ FILE *	loadFile(char *name){
 void readFile(Dungeon *newDungeon, FILE * const file){
         assert(file != NULL);
 	assert(newDungeon != NULL);
+	
 	if(file != NULL && newDungeon != NULL){
 		int position = 0;
 		char ch = '\0';
@@ -120,6 +117,8 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 		}
 	}
 	validateDungeon(newDungeon);
+	printDungeon(newDungeon);
+	playDungeon(newDungeon);
 }
 
 void printDungeon(Dungeon const * const newDungeon){
@@ -149,7 +148,7 @@ void validateDungeon(Dungeon const * const newDungeon){
 	assert(newDungeon->operate != NULL);
 }
 
-void playDungeon(int m, Dungeon *newDungeon){
+void playDungeon(Dungeon *newDungeon){
 	assert(newDungeon != NULL);
 	validateDungeon(newDungeon);
 	int distance = 0;
