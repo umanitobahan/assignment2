@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
+#include <math.h>
 
 struct DUNGEON{
 	char title[500];
@@ -33,9 +34,9 @@ int main(int argc, char *argv[]){
 		readFile(&newDungeon, file);
 		validateDungeon(&newDungeon);
 		printDungeon(&newDungeon);
-		while(move <= newDungeon.steps){
+		//while(move <= newDungeon.steps){
 			playDungeon(move, &newDungeon);
-		}
+		//}
 	}
 
 	return EXIT_SUCCESS;
@@ -147,15 +148,122 @@ void validateDungeon(Dungeon const * const newDungeon){
 	assert(newDungeon->title != NULL);
 	assert(newDungeon->title[strlen(newDungeon->title)] == '\0');
 	assert(newDungeon->array != NULL);
+	assert(newDungeon->operate != NULL);
 }
 
 void playDungeon(int m, Dungeon *newDungeon){
 	assert(newDungeon != NULL);
+	validateDungeon(newDungeon);
+	int distance = 0;
+	float range1 = sqrt(2);
+	float range2 = sqrt(8);
+	float range3 = 3.0;
+	int mr = 0;
+	int mc = 0;
 	if(newDungeon != NULL){
 		for(int i=0; i<newDungeon->steps; i++){
 			if(newDungeon->operate[i] == 'v'){
-
+				for(int r=1; r<=newDungeon->rows; r++){
+					for(int c=1; c<=newDungeon->cols; c++){
+						if(newDungeon->array[r][c] == '%'){
+							mr = r;
+							mc = c;
+								
+							}
+						}
+					}
+				if(newDungeon->array[mr+1][mc] == '-' || newDungeon->array[mr+1][mc] == '!'){
+					}
+				if(newDungeon->array[mr+1][mc] != '-' && newDungeon->array[mr+1][mc] != '!'){
+					newDungeon->array[mr][mc] = ',';
+					newDungeon->array[mr+1][mc] = '%';
+					newDungeon->move = newDungeon->move+1;
+				}
+				for(int newr=1; newr<=newDungeon->rows; newr++){
+					for(int newc=1; newc<=newDungeon->cols; newc++){
+						distance = sqrt(pow((newc-mc), 2)+pow((newr-(mr+1)),2));
+						if(distance == 0){
+						}
+						if(distance>0 && distance <= range1 && newDungeon->array[newr][newc] != '!'){
+							newDungeon->array[newr][newc] = '#';		
+						}
+						if(distance > range1 && distance <= range2 && newDungeon->array[newr][newc] != '!'){
+							newDungeon->array[newr][newc] = '=';
+						}
+						if(distance > range2 && distance <= range3 && newDungeon->array[newr][newc] != '!'){
+							newDungeon->array[newr][newc] = '-';
+						}
+						if(distance > range3){
+							if(newDungeon->array[newr][newc] == '#' || newDungeon->array[newr][newc] == '=' || newDungeon->array[newr][newc] == '-'){
+								newDungeon->array[newr][newc] = ',';
+							}
+						} 
+					}
+				}
+				printDungeon(newDungeon);	
 			}
-		}
-	}	
+
+			if(newDungeon->operate[i] == '^'){
+				for(int r=1; r<=newDungeon->rows; r++){
+                                        for(int c=1; c<=newDungeon->cols; c++){
+                                                if(newDungeon->array[r][c] == '%'){
+                                                        mr = r;
+                                                        mc = c;
+
+                                                }
+                                        }
+				}
+				if(newDungeon->array[mr-1][mc] == '-' || newDungeon->array[mr-1][mc] == '!'){
+				}
+                                if(newDungeon->array[mr-1][mc] != '-' && newDungeon->array[mr+1][mc] != '!'){
+                                        newDungeon->array[mr][mc] = ',';
+                                        newDungeon->array[mr-1][mc] = '%';
+                                        newDungeon->move = newDungeon->move+1;
+                                }
+                                printDungeon(newDungeon);
+			        
+			}
+
+			if(newDungeon->operate[i] == '>'){
+				for(int r=1; r<=newDungeon->rows; r++){
+                                        for(int c=1; c<=newDungeon->cols; c++){
+                                                if(newDungeon->array[r][c] == '%'){
+                                                        mr = r;
+                                                        mc = c;
+
+                                                        }
+                                                }
+                                        }
+				if(newDungeon->array[mr][mc+1] == '|' || newDungeon->array[mr][mc+1] == '!'){
+				}
+                                if(newDungeon->array[mr][mc+1] != '|' && newDungeon->array[mr][mc+1] != '!'){
+                                        newDungeon->array[mr][mc] = ',';
+                                        newDungeon->array[mr][mc+1] = '%';
+                                        newDungeon->move = newDungeon->move+1;
+                                }
+                                printDungeon(newDungeon);
+			}
+
+			if(newDungeon->operate[i] == '<'){
+				for(int r=1; r<=newDungeon->rows; r++){
+                                        for(int c=1; c<=newDungeon->cols; c++){
+                                                if(newDungeon->array[r][c] == '%'){
+                                                        mr = r;
+                                                        mc = c;
+
+                                                        }
+                                                }
+                                        }
+				if(newDungeon->array[mr][mc-1] == '|' || newDungeon->array[mr][mc-1] == '!'){
+				}
+                                if(newDungeon->array[mr][mc-1] != '|' && newDungeon->array[mr][mc-1] != '!'){
+                                        newDungeon->array[mr][mc] = ',';
+                                        newDungeon->array[mr][mc-1] = '%';
+                                        newDungeon->move = newDungeon->move+1;
+                                }
+                                printDungeon(newDungeon);
+			}
+	
+		}	
+	}
 }
