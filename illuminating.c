@@ -24,6 +24,7 @@ void readFile(Dungeon *newDungeon, FILE * const file);
 void printDungeon(Dungeon const * const newDungeon);
 void validateDungeon(Dungeon const * const newDungeon);
 void playDungeon(Dungeon *newDungeon);
+void printTitle(Dungeon const * const newDungeon);
 
 int main(int argc, char *argv[]){
 	FILE *file = NULL;
@@ -60,73 +61,74 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 		int position = 0;
 		char ch = '\0';
 		bool nfinish = true;
-		while(nfinish){
-		ch = fgetc(file);
-		if(ch == '*'){
-			newDungeon->title[position++] = ch;
+		while(ch != EOF){
 			ch = fgetc(file);
-			while(ch != '\n'){
+			if(ch == '*'){
 				newDungeon->title[position++] = ch;
 				ch = fgetc(file);
-			}
-			newDungeon->title[position++] = ch;
-			newDungeon->title[position] = '\0';
-			assert(ch == '\n');
-			position = 0;
-		fscanf(file, "%d%d%d", &(newDungeon->rows), &(newDungeon->cols), &(newDungeon->steps));
-		newDungeon->move = 0;
-		ch = fgetc(file);
-		while(ch != '\n'){
-			ch = fgetc(file);
-		}
-		for(int r=1; r<=newDungeon->rows; r++){
-			for(int c=1; c<=newDungeon->cols; c++){
+				while(ch != '\n'){
+					newDungeon->title[position++] = ch;
+					ch = fgetc(file);
+					}
+				newDungeon->title[position] = '\0';
+				assert(ch == '\n');
+				position = 0;
+				fscanf(file, "%d%d%d", &(newDungeon->rows), &(newDungeon->cols), &(newDungeon->steps));
+				newDungeon->move = 0;
 				ch = fgetc(file);
-			  	if(ch == '@'){
-					newDungeon->array[r][c] = '%';
+				while(ch != '\n'){
+					ch = fgetc(file);
 				}
-				if(ch == '.'){
-					newDungeon->array[r][c] = ',';
+			for(int r=1; r<=newDungeon->rows; r++){
+				for(int c=1; c<=newDungeon->cols; c++){
+					ch = fgetc(file);
+			  		if(ch == '@'){
+						newDungeon->array[r][c] = '%';
+					}
+					if(ch == '.'){
+						newDungeon->array[r][c] = ',';
+					}
+					if(ch == '~'){
+						newDungeon->array[r][c] = '!';
+					}
+					if(ch == ' '){
+						newDungeon->array[r][c] = ' ';
+					}
 				}
-				if(ch == '~'){
-					newDungeon->array[r][c] = '!';
-				}
-				if(ch == ' '){
-					newDungeon->array[r][c] = ' ';
+				while(ch != '\n' && ch != EOF){
+					ch = fgetc(file);
 				}
 			}
+			assert(ch == '\n' && ch != EOF);
+			for(position=0; position<newDungeon->steps; position++){
+				ch = fgetc(file);
+				newDungeon->operate[position] = ch;
+			}
+			position = 0;
 			while(ch != '\n' && ch != EOF){
 				ch = fgetc(file);
 			}
-		}
-		assert(ch == '\n' && ch != EOF);
-		for(position=0; position<newDungeon->steps; position++){
-			ch = fgetc(file);
-			newDungeon->operate[position] = ch;
-		}
-		while(ch != '\n' && ch != EOF){
-			ch = fgetc(file);
-		}
-		if(ch == EOF){
-			nfinish = false;
-		}
-		newDungeon->operate[position] = '\0';
-		newDungeon->array[0][0] = '+';
-		newDungeon->array[0][newDungeon->cols+1] = '+';
-		newDungeon->array[newDungeon->rows+1][0] = '+';
-		newDungeon->array[newDungeon->rows+1][newDungeon->cols+1] = '+';
-		for(int c=1; c<=newDungeon->cols; c++){
-			newDungeon->array[0][c] = '-';
-			newDungeon->array[newDungeon->rows+1][c] = '-';
-		}
-		for(int r=1; r<=newDungeon->rows; r++){
-			newDungeon->array[r][0] = '|';
-			newDungeon->array[r][newDungeon->cols+1] = '|';
-		}
+			if(ch == EOF){
+				nfinish = false;
+			}
+			newDungeon->operate[position] = '\0';
+			newDungeon->array[0][0] = '+';
+			newDungeon->array[0][newDungeon->cols+1] = '+';
+			newDungeon->array[newDungeon->rows+1][0] = '+';
+			newDungeon->array[newDungeon->rows+1][newDungeon->cols+1] = '+';
+			for(int c=1; c<=newDungeon->cols; c++){
+				newDungeon->array[0][c] = '-';
+				newDungeon->array[newDungeon->rows+1][c] = '-';
+			}
+			for(int r=1; r<=newDungeon->rows; r++){
+				newDungeon->array[r][0] = '|';
+				newDungeon->array[r][newDungeon->cols+1] = '|';
+			}
 	
-	validateDungeon(newDungeon);
-	printDungeon(newDungeon);
-	playDungeon(newDungeon);
+		validateDungeon(newDungeon);
+		printTitle(newDungeon);
+		printDungeon(newDungeon);
+		playDungeon(newDungeon);
 	
 	}
 	}
@@ -137,7 +139,6 @@ void printDungeon(Dungeon const * const newDungeon){
 	assert(newDungeon != NULL);
 	validateDungeon(newDungeon);
 	if(newDungeon != NULL){
-		printf("%s\n", newDungeon->title);
 		printf("Move %d:\n",newDungeon->move);
 		for(int r=0; r<=newDungeon->rows+1; r++){
                         for(int c=0; c<=newDungeon->cols+1; c++){
@@ -145,9 +146,6 @@ void printDungeon(Dungeon const * const newDungeon){
                         }
                         printf("\n");
                 }
-	for(int i=0; i<newDungeon->steps; i++){
-		printf("%c", newDungeon->operate[i]);
-	}
 	printf("\n");
 	}
 }
@@ -369,5 +367,12 @@ void playDungeon(Dungeon *newDungeon){
 			}
 	
 		}	
+	}
+}
+
+void printTitle(Dungeon const * const newDungeon){
+	assert(newDungeon != NULL);
+	if(newDungeon != NULL){
+		printf("%s\n", newDungeon->title);
 	}
 }
