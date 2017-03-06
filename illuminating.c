@@ -34,9 +34,7 @@ int main(int argc, char *argv[]){
 		readFile(&newDungeon, file);
 		validateDungeon(&newDungeon);
 		printDungeon(&newDungeon);
-		//while(move <= newDungeon.steps){
-			playDungeon(move, &newDungeon);
-		//}
+		playDungeon(move, &newDungeon);
 	}
 
 	return EXIT_SUCCESS;
@@ -220,6 +218,28 @@ void playDungeon(int m, Dungeon *newDungeon){
                                         newDungeon->array[mr-1][mc] = '%';
                                         newDungeon->move = newDungeon->move+1;
                                 }
+				for(int newr=1; newr<=newDungeon->rows; newr++){
+                                        for(int newc=1; newc<=newDungeon->cols; newc++){
+                                                distance = sqrt(pow((newc-mc), 2)+pow((newr-(mr-1)),2));
+                                                if(distance == 0){
+                                                }
+                                                if(distance>0 && distance <= range1 && newDungeon->array[newr][newc] != '!'){
+                                                        newDungeon->array[newr][newc] = '#';
+                                                }
+                                                if(distance > range1 && distance <= range2 && newDungeon->array[newr][newc] != '!'){
+                                                        newDungeon->array[newr][newc] = '=';
+                                                }
+                                                if(distance > range2 && distance <= range3 && newDungeon->array[newr][newc] != '!'){
+                                                        newDungeon->array[newr][newc] = '-';
+                                                }
+                                                if(distance > range3){
+                                                        if(newDungeon->array[newr][newc] == '#' || newDungeon->array[newr][newc] == '=' || newDungeon->array[newr][newc] == '-'){
+                                                                newDungeon->array[newr][newc] = ',';
+                                                        }
+                                                }
+                                        }
+                                }
+
                                 printDungeon(newDungeon);
 			        
 			}
@@ -241,6 +261,28 @@ void playDungeon(int m, Dungeon *newDungeon){
                                         newDungeon->array[mr][mc+1] = '%';
                                         newDungeon->move = newDungeon->move+1;
                                 }
+				for(int newr=1; newr<=newDungeon->rows; newr++){
+                                        for(int newc=1; newc<=newDungeon->cols; newc++){
+                                                distance = sqrt(pow((newc-(mc+1)), 2)+pow((newr-mr),2));
+                                                if(distance == 0){
+                                                }
+                                                if(distance>0 && distance <= range1 && newDungeon->array[newr][newc] != '!'){
+                                                        newDungeon->array[newr][newc] = '#';
+                                                }
+                                                if(distance > range1 && distance <= range2 && newDungeon->array[newr][newc] != '!'){
+                                                        newDungeon->array[newr][newc] = '=';
+                                                }
+                                                if(distance > range2 && distance <= range3 && newDungeon->array[newr][newc] != '!'){
+                                                        newDungeon->array[newr][newc] = '-';
+                                                }
+                                                if(distance > range3){
+                                                        if(newDungeon->array[newr][newc] == '#' || newDungeon->array[newr][newc] == '=' || newDungeon->array[newr][newc] == '-'){
+                                                                newDungeon->array[newr][newc] = ',';
+                                                        }
+                                                }
+                                        }
+                                }
+
                                 printDungeon(newDungeon);
 			}
 
@@ -261,6 +303,28 @@ void playDungeon(int m, Dungeon *newDungeon){
                                         newDungeon->array[mr][mc-1] = '%';
                                         newDungeon->move = newDungeon->move+1;
                                 }
+				for(int newr=1; newr<=newDungeon->rows; newr++){
+                                        for(int newc=1; newc<=newDungeon->cols; newc++){
+                                                distance = sqrt(pow((newc-(mc-1)), 2)+pow((newr-mr),2));
+                                                if(distance == 0){
+                                                }
+                                                if(distance>0 && distance <= range1 && newDungeon->array[newr][newc] != '!'){
+                                                        newDungeon->array[newr][newc] = '#';
+                                                }
+                                                if(distance > range1 && distance <= range2 && newDungeon->array[newr][newc] != '!'){
+                                                        newDungeon->array[newr][newc] = '=';
+                                                }
+                                                if(distance > range2 && distance <= range3 && newDungeon->array[newr][newc] != '!'){
+                                                        newDungeon->array[newr][newc] = '-';
+                                                }
+                                                if(distance > range3){
+                                                        if(newDungeon->array[newr][newc] == '#' || newDungeon->array[newr][newc] == '=' || newDungeon->array[newr][newc] == '-'){
+                                                                newDungeon->array[newr][newc] = ',';
+                                                        }
+                                                }
+                                        }
+                                }
+
                                 printDungeon(newDungeon);
 			}
 	
