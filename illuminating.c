@@ -5,8 +5,10 @@
 #include <assert.h>
 #include <math.h>
 
+typedef enum BOOL {false, true} bool;
+
 struct DUNGEON{
-	char title[500];
+	char title[1000];
 	char array[1000][1000];
 	char operate[500];
 	int rows;
@@ -32,7 +34,7 @@ int main(int argc, char *argv[]){
 	if(file != NULL){
 		readFile(&newDungeon, file);
 	}
-
+	fclose(file);
 	return EXIT_SUCCESS;
 }
 
@@ -57,20 +59,20 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 	if(file != NULL && newDungeon != NULL){
 		int position = 0;
 		char ch = '\0';
+		bool nfinish = true;
+		while(nfinish){
 		ch = fgetc(file);
 		if(ch == '*'){
 			newDungeon->title[position++] = ch;
 			ch = fgetc(file);
-			while(ch != '*'){
+			while(ch != '\n'){
 				newDungeon->title[position++] = ch;
 				ch = fgetc(file);
 			}
 			newDungeon->title[position++] = ch;
 			newDungeon->title[position] = '\0';
-			while(ch != '\n'){
- 				ch = fgetc(file);
-			}
-		}
+			assert(ch == '\n');
+			position = 0;
 		fscanf(file, "%d%d%d", &(newDungeon->rows), &(newDungeon->cols), &(newDungeon->steps));
 		newDungeon->move = 0;
 		ch = fgetc(file);
@@ -93,14 +95,20 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 					newDungeon->array[r][c] = ' ';
 				}
 			}
-			while(ch != '\n'){
+			while(ch != '\n' && ch != EOF){
 				ch = fgetc(file);
 			}
 		}
-		assert(ch == '\n');
+		assert(ch == '\n' && ch != EOF);
 		for(position=0; position<newDungeon->steps; position++){
 			ch = fgetc(file);
 			newDungeon->operate[position] = ch;
+		}
+		while(ch != '\n' && ch != EOF){
+			ch = fgetc(file);
+		}
+		if(ch == EOF){
+			nfinish = false;
 		}
 		newDungeon->operate[position] = '\0';
 		newDungeon->array[0][0] = '+';
@@ -115,10 +123,14 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 			newDungeon->array[r][0] = '|';
 			newDungeon->array[r][newDungeon->cols+1] = '|';
 		}
-	}
+	
 	validateDungeon(newDungeon);
 	printDungeon(newDungeon);
 	playDungeon(newDungeon);
+	
+	}
+	}
+	}
 }
 
 void printDungeon(Dungeon const * const newDungeon){
@@ -323,8 +335,9 @@ void playDungeon(Dungeon *newDungeon){
                                                 }
                                         }
                                 }
-
-                                printDungeon(newDungeon);
+				#ifndef NDEBUG
+                                	printDungeon(newDungeon);
+				#endif
 			}
 	
 		}	
