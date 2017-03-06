@@ -209,7 +209,15 @@ void playDungeon(Dungeon *newDungeon){
 						} 
 					}
 				}
-				printDungeon(newDungeon);	
+				#ifdef NDEBUG
+					if((newDungeon->steps-newDungeon->move)<10){
+						printDungeon(newDungeon);
+					}
+				#endif
+
+				#ifndef NDEBUG
+					printDungeon(newDungeon);
+				#endif	
 			}
 
 			if(newDungeon->operate[i] == '^'){
@@ -250,8 +258,15 @@ void playDungeon(Dungeon *newDungeon){
                                                 }
                                         }
                                 }
+				#ifdef NDEBUG
+                                        if((newDungeon->steps-newDungeon->move)<10){
+                                                printDungeon(newDungeon);
+                                        }
+                                #endif
 
-                                printDungeon(newDungeon);
+				#ifndef NDEBUG
+                                	printDungeon(newDungeon);
+				#endif
 			        
 			}
 
@@ -293,8 +308,15 @@ void playDungeon(Dungeon *newDungeon){
                                                 }
                                         }
                                 }
+				#ifdef NDEBUG
+                                        if((newDungeon->steps-newDungeon->move)<10){
+                                                printDungeon(newDungeon);
+                                        }
+                                #endif
 
-                                printDungeon(newDungeon);
+				#ifndef NDEBUG
+                                	printDungeon(newDungeon);
+				#endif
 			}
 
 			if(newDungeon->operate[i] == '<'){
@@ -335,6 +357,12 @@ void playDungeon(Dungeon *newDungeon){
                                                 }
                                         }
                                 }
+				#ifdef NDEBUG
+                                        if((newDungeon->steps-newDungeon->move)<10){
+                                                printDungeon(newDungeon);
+                                        }
+                                #endif
+
 				#ifndef NDEBUG
                                 	printDungeon(newDungeon);
 				#endif
