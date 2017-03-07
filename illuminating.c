@@ -1,9 +1,28 @@
+//-----------------------------------------
+//NAME: Liu Han
+//STUDENT NUMBER: 7694437
+//COURSE: COMP 2160, SECTION: A01
+//INSTRUCTOR: Franklin Bristow
+//ASSIGNMENT: assignment 2
+// 
+// REMARKS: read Dungeons from a file and move the acter follow steps
+//
+//-----------------------------------------
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
 #include <math.h>
+
+//-------------------------------------------------------------------------------------
+// CONSTANTS and TYPES
+//-------------------------------------------------------------------------------------
+
 
 typedef enum BOOL {false, true} bool;
 
@@ -18,11 +37,23 @@ struct DUNGEON{
 
 typedef struct DUNGEON Dungeon;
 
-FILE *loadFile(char *name);
-void readFile(Dungeon *newDungeon, FILE * const file);
-void printDungeon(Dungeon const * const newDungeon);
-void validateDungeon(Dungeon const * const newDungeon);
-void playDungeon(Dungeon *newDungeon);
+//-------------------------------------------------------------------------------------
+// VARIABLES
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// PROTOTYPES
+//-------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------
+// FUNCTIONS
+//-------------------------------------------------------------------------------------
+
+FILE *loadFile(char *name);// open file
+void readFile(Dungeon *newDungeon, FILE * const file);// read file
+void printDungeon(Dungeon const * const newDungeon);// print dungeon
+void validateDungeon(Dungeon const * const newDungeon);// check the dungeon is not NULL
+void playDungeon(Dungeon *newDungeon);// move acter in dungeon
 
 int main(int argc, char *argv[]){
 	FILE *file = NULL;
@@ -34,6 +65,7 @@ int main(int argc, char *argv[]){
 		readFile(&newDungeon, file);
 	}
 	fclose(file);
+	printf("End of the program. Programed by Liu Han");
 	return EXIT_SUCCESS;
 }
 
@@ -56,7 +88,7 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 	assert(newDungeon != NULL);
 	
 	if(file != NULL && newDungeon != NULL){
-		int position = 0;
+		int position = 0;// track position in 'title' and 'steps'
 		char ch = '\0';
 		bool nfinish = true;
 		while(ch != EOF){
@@ -78,6 +110,7 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 				while(ch != '\n'){
 					ch = fgetc(file);
 				}
+			//transfer
 			for(int r=1; r<=newDungeon->rows; r++){
 				for(int c=1; c<=newDungeon->cols; c++){
 					ch = fgetc(file);
@@ -165,7 +198,9 @@ void playDungeon(Dungeon *newDungeon){
 	float range3 = 3.0;
 	int mr = 0;
 	int mc = 0;
+
 	if(newDungeon != NULL){
+		//find acter
 		for(int i=0; i<newDungeon->steps; i++){
 			if(newDungeon->operate[i] == 'v'){
 				for(int r=1; r<=newDungeon->rows; r++){
