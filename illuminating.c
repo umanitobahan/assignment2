@@ -104,7 +104,7 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 				ch = fgetc(file);
 				newDungeon->operate[position] = ch;
 			}
-			position = 0;
+			
 			while(ch != '\n' && ch != EOF){
 				ch = fgetc(file);
 			}
@@ -112,6 +112,7 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 				nfinish = false;
 			}
 			newDungeon->operate[position] = '\0';
+			position = 0;
 			newDungeon->array[0][0] = '+';
 			newDungeon->array[0][newDungeon->cols+1] = '+';
 			newDungeon->array[newDungeon->rows+1][0] = '+';
