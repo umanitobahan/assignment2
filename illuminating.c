@@ -8,7 +8,6 @@
 typedef enum BOOL {false, true} bool;
 
 struct DUNGEON{
-	char title[1000];
 	char array[1000][1000];
 	char operate[500];
 	int rows;
@@ -24,7 +23,6 @@ void readFile(Dungeon *newDungeon, FILE * const file);
 void printDungeon(Dungeon const * const newDungeon);
 void validateDungeon(Dungeon const * const newDungeon);
 void playDungeon(Dungeon *newDungeon);
-void printTitle(Dungeon const * const newDungeon);
 
 int main(int argc, char *argv[]){
 	FILE *file = NULL;
@@ -62,15 +60,16 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 		char ch = '\0';
 		bool nfinish = true;
 		while(ch != EOF){
+			char title[1000];
 			ch = fgetc(file);
 			if(ch == '*'){
-				newDungeon->title[position++] = ch;
+				title[position++] = ch;
 				ch = fgetc(file);
 				while(ch != '\n'){
-					newDungeon->title[position++] = ch;
+					title[position++] = ch;
 					ch = fgetc(file);
 					}
-				newDungeon->title[position] = '\0';
+				title[position] = '\0';
 				assert(ch == '\n');
 				position = 0;
 				fscanf(file, "%d%d%d", &(newDungeon->rows), &(newDungeon->cols), &(newDungeon->steps));
@@ -127,7 +126,7 @@ void readFile(Dungeon *newDungeon, FILE * const file){
 			}
 	
 		validateDungeon(newDungeon);
-		printTitle(newDungeon);
+		printf("%s\n", title);
 		printDungeon(newDungeon);
 		playDungeon(newDungeon);
 	
@@ -153,8 +152,6 @@ void printDungeon(Dungeon const * const newDungeon){
 
 void validateDungeon(Dungeon const * const newDungeon){
 	assert(newDungeon != NULL);
-	assert(newDungeon->title != NULL);
-	assert(newDungeon->title[strlen(newDungeon->title)] == '\0');
 	assert(newDungeon->array != NULL);
 	assert(newDungeon->operate != NULL);
 }
@@ -371,9 +368,3 @@ void playDungeon(Dungeon *newDungeon){
 	}
 }
 
-void printTitle(Dungeon const * const newDungeon){
-	assert(newDungeon != NULL);
-	if(newDungeon != NULL){
-		printf("%s\n", newDungeon->title);
-	}
-}
