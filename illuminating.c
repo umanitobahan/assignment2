@@ -181,6 +181,7 @@ void printDungeon(Dungeon const * const newDungeon){
                 }
 	printf("\n");
 	}
+	validateDungeon(newDungeon);
 }
 
 void validateDungeon(Dungeon const * const newDungeon){
@@ -401,5 +402,6 @@ void playDungeon(Dungeon *newDungeon){
 	
 		}	
 	}
+	validateDungeon(newDungeon);
 }
 
